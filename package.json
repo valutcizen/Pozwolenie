@@ -7,9 +7,10 @@
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build-only": "vite build --base=Pozwolenie",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "deploy": "git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.5",
