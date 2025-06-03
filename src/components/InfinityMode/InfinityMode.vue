@@ -2,7 +2,7 @@
   <v-container class="pt-8" max-width="900">
     <v-card
       :title="'Pytanie ' + (currentQuestionIndex + 1) + ' z ' + data.questions.length"
-      style="width: 600px; min-width: 60px; margin: 0 auto;"
+      style="min-width: 300px; max-width: 800px; margin: 0 auto;"
       variant="tonal">
       <v-card-text>
         <div style="font-size: 1.1em; margin-bottom: 20px;">
