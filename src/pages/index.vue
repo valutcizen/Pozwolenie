@@ -1,5 +1,5 @@
 <template>
-  <infinity-mode />
+  <main-menu />
 </template>
 
 <script lang="ts" setup>
