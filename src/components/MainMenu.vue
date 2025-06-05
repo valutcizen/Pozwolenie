@@ -4,11 +4,11 @@
       <v-img
         class="mb-4"
         height="120"
-        src="@/assets/logo.png"
+        src="@/assets/logo-trzy-twierdze-2.webp"
       />
 
       <div class="mb-8 text-center">
-        <h4>Twoje Logo - Twój Nagłówek</h4>
+        <h4>Stowarzyszenie Trzy Twierdze</h4>
         <h3>Aplikacja pomagająca w nauce do egzaminu WPA na pozwolenie na broń</h3>
       </div>
     </div>  
