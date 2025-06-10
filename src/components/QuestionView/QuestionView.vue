@@ -11,7 +11,7 @@
         <v-list-item
           v-for="(answer, index) in question.answers"
           :key="index"
-          @click="answerSelected === undefined && (answerSelected = index)"
+          @click="answerSelected === undefined && onAnswerSelected(index)"
           :class="{
             'bg-green-lighten-3': answerSelected !== undefined && index === question.correct,
             'bg-red-lighten-3': answerSelected !== undefined && index === answerSelected && answerSelected !== question.correct,
@@ -42,9 +42,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import type QuestionList from '../../services/questionList';
 import type { IndexedQuestion } from '../../model/indexedQuestion';
+
+const emit = defineEmits<{
+  (e: 'answered', stats: ReturnType<QuestionList['getStats']>): void;
+  (e: 'reset'): void;
+}>();
 
 const props = defineProps<{
   questionList: QuestionList;
@@ -60,6 +65,14 @@ const errorQuestion = {
 
 let question = ref<IndexedQuestion>(props.questionList.getNextQuestion() || errorQuestion);
 let answerSelected = ref<undefined|number>(undefined);
+
+function onAnswerSelected(value: number) {
+  if (value !== undefined) {
+    props.questionList.answered(question.value.correct === value);
+  }
+  answerSelected.value = value;
+  emit('answered', props.questionList.getStats());
+}
 
 function next() {
   if (answerSelected.value !== undefined) {

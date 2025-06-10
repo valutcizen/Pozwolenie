@@ -64,7 +64,18 @@
       v-if="questionList"
       :question-list="questionList"
       :infinite="infinity"
-      @reset="questionList = null"></question-view>
+      @reset="questionList = null"
+      @answered="onAnswered"></question-view>
+
+    <v-card v-if="questionList" class="mt-8">
+      <v-card-title class="text-center">Statystyki</v-card-title>
+      <v-card-text class="text-center">
+        <p>Czas zapisany: {{ stats.sessionsTime }}</p>
+        <p>Odpowiedzi: {{ stats.totalQuestions }}</p>
+        <p>Odpowiedzi poprawne: {{ stats.correctAnswers }}</p>
+        <p>Odpowiedzi błędne: {{ stats.incorrectAnswers }}</p>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -76,10 +87,17 @@ import { ref } from 'vue';
 import OrderedQuestionList from '../services/orderedQuestionList';
 import RandomizedQuestionList from '../services/randomizedQuestionList';
 import QuestionsDataJson from '../data/questions.json';
+import { createEmptyStatsData } from '../model/statsData';
+import type StatsData from '../model/statsData';
 
 const questionRange = new QuestionRange(0, 199);
 const questionsData = QuestionsDataJson as QuestionsData;
 
 const infinity = ref<boolean>(false);
 const questionList = ref<QuestionList|null>(null);
+const stats = ref<StatsData>(createEmptyStatsData(200));
+
+function onAnswered(statsData: StatsData) {
+  stats.value = statsData;
+}
 </script>

@@ -2,13 +2,20 @@ import type { IndexedQuestion } from "@/model/indexedQuestion";
 import type Question from "@/model/question";
 import type QuestionsData from "@/model/questionData";
 import type QuestionRange from "@/model/questionRange";
+import type StatsData from "@/model/statsData";
+import StatsService from "./statsService";
 
 export default class RandomizedQuestionList {
     private questions: Question[];
-    questionRange: number[];
+    private questionRange: number[];
+    public stats: StatsService;
 
-    constructor(questionData: QuestionsData, questionRangeDefinition: QuestionRange, private currentIndex: number = 0) {
+    constructor(questionData: QuestionsData, 
+            questionRangeDefinition: QuestionRange, 
+            statsData: StatsData | null = null,
+            public currentIndex: number = 0) {
         this.questions = questionData.questions;
+        this.stats = new StatsService(statsData ?? this.questions.length);
         this.questionRange = questionRangeDefinition.getQuestionIndexes(this.questions.length);
         this.shuffleQuestions();
     }
@@ -38,5 +45,13 @@ export default class RandomizedQuestionList {
     public reset(): void {
         this.currentIndex = 0;
         this.shuffleQuestions();
+    }
+
+    public answered(correct: boolean): void {
+        this.stats.recordAnswer(this.currentIndex - 1, correct);
+    }
+
+    public getStats(): StatsData {
+        return this.stats.getStats();
     }
 }
