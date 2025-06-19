@@ -8,7 +8,7 @@ export default class StatsService {
         if (typeof statsData === 'number') {
             this.statsData = createEmptyStatsData(statsData);
         } else {
-            this.statsData = {...statsData, currentSessionStartTime: new Date() };
+            this.statsData = {...statsData, currentSessionStartTime: Date.now() };
         }
     }
 
@@ -26,8 +26,8 @@ export default class StatsService {
     }
 
     public finish(): void {
-        this.statsData.sessionsTime += Date.now() - this.statsData.currentSessionStartTime.getTime();
-        this.statsData.currentSessionStartTime = new Date();
+        this.statsData.sessionsTime += Date.now() - this.statsData.currentSessionStartTime;
+        this.statsData.currentSessionStartTime = Date.now();
     }
 
     public shuffleQuestions(range: number[]): void {

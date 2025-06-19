@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IndexedQuestion } from '../../model/indexedQuestion';
+import type { IndexedQuestion } from '../model/indexedQuestion';
 
 const props = defineProps<{
   question: IndexedQuestion;

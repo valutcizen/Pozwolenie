@@ -18,13 +18,13 @@
       @learn="setLearn"
       @exam="setExam"
     />
-    <learn-view v-else-if="mode===Mode.Learn" 
+    <learn-view v-else-if="mode===Mode.Learn && questionList" 
       :question-list="questionList"
       :infinite="infinity"
       @reset="mode=Mode.Menu"
       @answered="stats = $event"
     />
-    <exam-view v-else-if="mode===Mode.Exam"
+    <exam-view v-else-if="mode===Mode.Exam && questionList"
       :question-list="questionList"
       :question-data="questionsData"
       @reset="mode=Mode.Menu"
@@ -47,13 +47,13 @@ import MainMenu from "../components/MainMenu.vue";
 import LearnView from "../components/LearnView.vue";
 import ExamView from "../components/ExamView.vue";
 
-import QuestionRange from "@/model/questionRange";
-import RandomizedQuestionList from "@/services/randomizedQuestionList";
-import OrderedQuestionList from "@/services/orderedQuestionList";
-import type StatsData from "@/model/statsData";
-import type QuestionsData from "@/model/questionData";
-import type QuestionList from "@/services/questionList";
-import { createEmptyStatsData } from "@/model/statsData";
+import QuestionRange from "../model/questionRange";
+import RandomizedQuestionList from "../services/randomizedQuestionList";
+import OrderedQuestionList from "../services/orderedQuestionList";
+import type StatsData from "../model/statsData";
+import type QuestionsData from "../model/questionData";
+import type IQuestionList from "../services/questionList";
+import { createEmptyStatsData } from "../model/statsData";
 
 enum Mode {
   Menu, Learn, Exam
@@ -64,7 +64,7 @@ const questionRange = new QuestionRange(0, 199);
 const questionsData = QuestionsDataJson as QuestionsData;
 
 const infinity = ref<boolean>(false);
-const questionList = ref<QuestionList|null>(null);
+const questionList = ref<IQuestionList|null>(null);
 const stats = ref<StatsData>(createEmptyStatsData(200));
 
 function setLearn(args: {infinite: boolean, randomized: boolean}) {

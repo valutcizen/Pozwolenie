@@ -8,19 +8,22 @@
     @answer="onAnswerSelected"
     @next="next"
   />
-  <StatsCard :stats="stats" />
+  <StatsCard 
+    :stats="stats"
+    :clickable="false"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import QuestionCard from './QuestionCard.vue';
 import StatsCard from './StatsCard.vue';
-import type QuestionList from '../../services/questionList';
-import type { IndexedQuestion } from '../../model/indexedQuestion';
-import type StatsData from '../../model/statsData';
+import type IQuestionList from '../services/questionList';
+import type { IndexedQuestion } from '../model/indexedQuestion';
+import type StatsData from '../model/statsData';
 
 const props = defineProps<{
-  questionList: QuestionList;
+  questionList: IQuestionList;
   infinite: boolean;
 }>();
 

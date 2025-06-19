@@ -10,7 +10,7 @@
     @next="next"
   />
   <QuestionCard v-else
-    :question="questionData.questions[questionIdx]"
+    :question="indexedQuestion"
     :answer-selected="answers[currentIndex]"
     :infinite="false"
     :exam-mode="false"
@@ -29,10 +29,10 @@
 import { computed, ref } from 'vue';
 import QuestionCard from './QuestionCard.vue';
 import StatsCard from './StatsCard.vue';
-import type QuestionList from '../../services/questionList';
-import type { IndexedQuestion } from '../../model/indexedQuestion';
-import type StatsData from '../../model/statsData';
-import type QuestionsData from '@/model/questionData';
+import type QuestionList from '../services/questionList';
+import type { IndexedQuestion } from '../model/indexedQuestion';
+import type StatsData from '../model/statsData';
+import type QuestionsData from '../model/questionData';
 
 const props = defineProps<{
   questionList: QuestionList;
@@ -86,5 +86,12 @@ function next() {
 
 const questionIdx = computed(() => {
   return stats.value.questionIdx[currentIndex.value];
+});
+
+const indexedQuestion = computed(() => {
+  return {...props.questionData.questions[questionIdx.value], 
+    index: questionIdx.value,
+    is_last: false
+  } as IndexedQuestion;
 });
 </script>

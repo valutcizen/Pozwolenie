@@ -1,6 +1,6 @@
 export default interface StatsData {
     sessionsTime: number;
-    currentSessionStartTime: Date;
+    currentSessionStartTime: number;
     totalQuestions: number;
     correctAnswers: number[];
     incorrectAnswers: number[];
@@ -10,7 +10,7 @@ export default interface StatsData {
 export function createEmptyStatsData(questions: number): StatsData {
     return {
         sessionsTime: 0,
-        currentSessionStartTime: new Date(),
+        currentSessionStartTime: Date.now(),
         totalQuestions: 0,
         correctAnswers: Array(questions).fill(0),
         incorrectAnswers: Array(questions).fill(0),
