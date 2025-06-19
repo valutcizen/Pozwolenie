@@ -18,7 +18,11 @@
     @next="currentIndex = (currentIndex + 1) % 20"
   ></QuestionCard>
   <StatsCard v-if="examFinished" 
-    :stats="stats" />
+    :stats="stats"
+    :clickable="true"
+    :time-override="timeOverride"
+    @row-click="currentIndex = $event"
+  />
 </template>
 
 <script setup lang="ts">
@@ -54,6 +58,7 @@ let stats = ref<StatsData>(props.questionList.getStats());
 const answers = ref<number[]>(Array(20).fill(0));
 let currentIndex = ref(0);
 let examFinished = ref(false);
+let timeOverride = ref<number | undefined>(undefined);
 
 function onAnswerSelected(value: number) {
   if (value !== undefined) {
@@ -71,6 +76,7 @@ function next() {
     if (currentIndex.value >= 20) {
       examFinished.value = true;
       currentIndex.value = 0;
+      timeOverride.value = Date.now() - stats.value.currentSessionStartTime;
       return;
     }
     question.value = props.questionList.getNextQuestion() || errorQuestion;
