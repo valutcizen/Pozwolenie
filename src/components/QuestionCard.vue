@@ -12,7 +12,7 @@
         <v-list-item
           v-for="(answer, index) in question.answers"
           :key="index"
-          @click="answerSelected === undefined && $emit('answer', index)"
+          @click="(answerSelected === undefined || examMode) && $emit('answer', index)"
           :class="getAnswerClass(index)"
           style="cursor: pointer;"
         >
