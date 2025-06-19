@@ -4,6 +4,7 @@ export default interface StatsData {
     totalQuestions: number;
     correctAnswers: number[];
     incorrectAnswers: number[];
+    questionIdx: number[];
 }
 
 export function createEmptyStatsData(questions: number): StatsData {
@@ -12,6 +13,7 @@ export function createEmptyStatsData(questions: number): StatsData {
         currentSessionStartTime: new Date(),
         totalQuestions: 0,
         correctAnswers: Array(questions).fill(0),
-        incorrectAnswers: Array(questions).fill(0)
+        incorrectAnswers: Array(questions).fill(0),
+        questionIdx: Array.from({ length: questions }, (_, i) => i)
     };
 }

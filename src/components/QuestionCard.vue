@@ -44,7 +44,7 @@ const props = defineProps<{
   answerSelected: number | undefined;
   infinite: boolean;
   examMode: boolean;
-  cardTitle?: string | null;
+  cardTitle: string;
 }>();
 defineEmits(['answer', 'next']);
 

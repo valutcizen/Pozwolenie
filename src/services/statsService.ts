@@ -29,4 +29,19 @@ export default class StatsService {
         this.statsData.sessionsTime += Date.now() - this.statsData.currentSessionStartTime.getTime();
         this.statsData.currentSessionStartTime = new Date();
     }
+
+    public shuffleQuestions(range: number[]): void {
+        for (let i = range.length - 1; i > 0; i--) {
+            const j = this.statsData.questionIdx
+                .findIndex(idx => idx === range[i]);
+            if (j !== -1) {
+                [this.statsData.questionIdx[i], this.statsData.questionIdx[j]] = 
+                    [this.statsData.questionIdx[j], this.statsData.questionIdx[i]];
+                [this.statsData.correctAnswers[i], this.statsData.correctAnswers[j]] =
+                    [this.statsData.correctAnswers[j], this.statsData.correctAnswers[i]];
+                [this.statsData.incorrectAnswers[i], this.statsData.incorrectAnswers[j]] =
+                    [this.statsData.incorrectAnswers[j], this.statsData.incorrectAnswers[i]];
+            }
+        }
+    }
 }

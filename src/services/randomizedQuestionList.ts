@@ -26,6 +26,7 @@ export default class RandomizedQuestionList {
             const j = Math.floor(Math.random() * (i + 1));
             [range[i], range[j]] = [range[j], range[i]];
         }
+        this.stats.shuffleQuestions(range);
     }
 
     public getNextQuestion(): IndexedQuestion | null {

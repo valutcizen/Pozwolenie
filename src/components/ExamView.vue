@@ -1,27 +1,38 @@
 <template>
   <QuestionCard
-    v-if="currentIndex < questions.length"
-    :question="questions[currentIndex]"
+    v-if="examFinished === false"
+    :question="question"
     :answer-selected="answerSelected"
     :infinite="false"
     :exam-mode="true"
-    :card-title="'Pytanie ' + (currentIndex + 1) + ' z ' + questions.length"
+    :card-title="'Pytanie ' + (currentIndex + 1) + ' z 20'"
     @answer="onAnswerSelected"
     @next="next"
   />
-  <StatsCard v-else :stats="stats" />
+  <QuestionCard v-else
+    :question="questionData.questions[questionIdx]"
+    :answer-selected="answers[currentIndex]"
+    :infinite="false"
+    :exam-mode="false"
+    :card-title="'Pytanie ' + (questionIdx + 1)"
+    @next="currentIndex = (currentIndex + 1) % 20"
+  ></QuestionCard>
+  <StatsCard v-if="examFinished" 
+    :stats="stats" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import QuestionCard from './QuestionCard.vue';
 import StatsCard from './StatsCard.vue';
 import type QuestionList from '../../services/questionList';
 import type { IndexedQuestion } from '../../model/indexedQuestion';
 import type StatsData from '../../model/statsData';
+import type QuestionsData from '@/model/questionData';
 
 const props = defineProps<{
   questionList: QuestionList;
+  questionData: QuestionsData;
 }>();
 
 const emit = defineEmits<{
@@ -37,18 +48,16 @@ const errorQuestion = {
   index: 0
 } as IndexedQuestion;
 
-// Prepare first 20 questions
-const questions = ref<IndexedQuestion[]>(
-  Array.from({ length: 20 }, () => props.questionList.getNextQuestion() || errorQuestion)
-);
-
-let currentIndex = ref(0);
+let question = ref<IndexedQuestion>(props.questionList.getNextQuestion() || errorQuestion);
 let answerSelected = ref<undefined | number>(undefined);
 let stats = ref<StatsData>(props.questionList.getStats());
+const answers = ref<number[]>(Array(20).fill(0));
+let currentIndex = ref(0);
+let examFinished = ref(false);
 
 function onAnswerSelected(value: number) {
   if (value !== undefined) {
-    props.questionList.answered(questions.value[currentIndex.value].correct === value);
+    props.questionList.answered(question.value.correct === value);
   }
   answerSelected.value = value;
   stats.value = props.questionList.getStats();
@@ -57,8 +66,19 @@ function onAnswerSelected(value: number) {
 
 function next() {
   if (answerSelected.value !== undefined) {
+    answers.value[currentIndex.value] = answerSelected.value;
     currentIndex.value++;
+    if (currentIndex.value >= 20) {
+      examFinished.value = true;
+      currentIndex.value = 0;
+      return;
+    }
+    question.value = props.questionList.getNextQuestion() || errorQuestion;
     answerSelected.value = undefined;
   }
 }
+
+const questionIdx = computed(() => {
+  return stats.value.questionIdx[currentIndex.value];
+});
 </script>

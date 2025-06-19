@@ -26,6 +26,7 @@
     />
     <exam-view v-else-if="mode===Mode.Exam"
       :question-list="questionList"
+      :question-data="questionsData"
       @reset="mode=Mode.Menu"
       @answered="stats = $event"
     />
