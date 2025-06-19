@@ -8,9 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ExamView: typeof import('./components/ExamView.vue')['default']
+    LearnView: typeof import('./components/LearnView.vue')['default']
     MainMenu: typeof import('./components/MainMenu.vue')['default']
-    QuestionView: typeof import('./components/QuestionView/QuestionView.vue')['default']
+    QuestionCard: typeof import('./components/QuestionCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StatsCard: typeof import('./components/StatsCard.vue')['default']
   }
 }

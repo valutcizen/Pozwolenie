@@ -3,14 +3,20 @@ import type IQuestionList from "./questionList";
 import type QuestionRange from "@/model/questionRange";
 import type Question from "@/model/question";
 import type { IndexedQuestion } from "@/model/indexedQuestion";
+import type StatsData from "@/model/statsData";
+import StatsService from "./statsService";
 
 export default class OrderedQuestionList implements IQuestionList {
-    questionRange: number[];
-    questions: Question[];
+    private questionRange: number[];
+    private questions: Question[];
+    private stats: StatsService;
 
-    constructor(questionData: QuestionsData, questionRangeGenerator: QuestionRange, 
+    constructor(questionData: QuestionsData, 
+                questionRangeGenerator: QuestionRange, 
+                statsData: StatsData | null = null,
                 private currentIndex: number = 0) {
         this.questions = questionData.questions;
+        this.stats = new StatsService(statsData ?? this.questions.length);
         this.questionRange = questionRangeGenerator.getQuestionIndexes(this.questions.length);
     }
 
@@ -31,5 +37,13 @@ export default class OrderedQuestionList implements IQuestionList {
 
     public reset(): void {
         this.currentIndex = 0;
+    }
+
+    public answered(correct: boolean): void {
+        this.stats.recordAnswer(this.currentIndex - 1, correct);
+    }
+
+    public getStats(): StatsData {
+        return this.stats.getStats();
     }
 }
