@@ -46,7 +46,7 @@
         <div>Poprawnych odpowiedzi: <b>{{ correctCount }}</b></div>
         <div>Błędnych odpowiedzi: <b>{{ 20 - correctCount }}</b></div>
         <div>Procent poprawnych: <b>{{ percentCorrect }}%</b></div>
-        <div>Wymagany procent poprawnych: <b>80%</b></div>
+        <div>Wymagany procent poprawnych: <b>90%</b></div>
         <div>Czas: <b>{{ formattedExamTime }}</b></div>
       </v-card-text>
       <v-card-actions>
