@@ -5,6 +5,7 @@
     :infinite="infinite"
     :exam-mode="false"
     :card-title="'Pytanie ' + (question.index + 1)"
+    :show-source="true"
     @answer="onAnswerSelected"
     @next="next"
   />
