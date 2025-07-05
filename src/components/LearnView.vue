@@ -2,10 +2,10 @@
   <QuestionCard
     :question="question"
     :answer-selected="answerSelected"
-    :infinite="infinite"
+    :infinite="options.infinite"
     :exam-mode="false"
-    :card-title="'Pytanie ' + (question.index + 1)"
-    :show-source="true"
+    :card-title="cardTitle"
+    :show-source="showSource"
     @answer="onAnswerSelected"
     @next="next"
   />
@@ -16,16 +16,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import QuestionCard from './QuestionCard.vue';
 import StatsCard from './StatsCard.vue';
 import type IQuestionList from '../services/questionList';
 import type { IndexedQuestion } from '../model/indexedQuestion';
 import type StatsData from '../model/statsData';
+import type { LearnOptions } from '../model/learnOptions';
 
 const props = defineProps<{
   questionList: IQuestionList;
-  infinite: boolean;
+  options: LearnOptions;
 }>();
 
 const emit = defineEmits<{
@@ -56,11 +57,21 @@ function onAnswerSelected(value: number) {
 
 function next() {
   if (answerSelected.value !== undefined) {
-    if (props.infinite && question.value.is_last) {
+    if (props.options.infinite && question.value.is_last) {
       props.questionList.reset();
     }
     question.value = props.questionList.getNextQuestion() || errorQuestion;
     answerSelected.value = undefined;
   }
 }
+
+const showSource = computed(() => {
+  return props.options.showSource === 'always' || (props.options.showSource === 'after' && answerSelected.value !== undefined);
+});
+
+const cardTitle = computed(() => {
+  return props.options.showQuestionNumber === 'always' || (props.options.showQuestionNumber === 'after' && answerSelected.value !== undefined)
+    ? `Pytanie ${question.value.index + 1}`
+    : 'Pytanie';
+});
 </script>

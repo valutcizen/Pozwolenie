@@ -4,36 +4,48 @@
       <v-card class="mb-6">
         <v-card-title class="text-center">Nauka</v-card-title>
         <v-card-text>
+          <v-switch
+            v-model="learnOptions.infinite"
+            :label="learnOptions.infinite ? 'Nieskończony' : 'Pojedyńczy'"
+            color="primary"
+            hide-details
+          />
+          <v-switch
+            v-model="learnOptions.randomized"
+            :label="learnOptions.randomized ? 'Losowo' : 'Po kolei'"
+            color="primary"
+            hide-details
+          />
+          <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-title>Opcje dodatkowe</v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div class="mb-2">
+                  <div class="text-subtitle-2 mb-1">Numer pytania</div>
+                  <v-radio-group v-model="learnOptions.showQuestionNumber" density="compact">
+                    <v-radio label="Zawsze" value="always" />
+                    <v-radio label="Po odpowiedzi" value="after" />
+                    <v-radio label="Nigdy" value="never" />
+                  </v-radio-group>
+                </div>
+                <div>
+                  <div class="text-subtitle-2 mb-1">Źródło pytania</div>
+                  <v-radio-group v-model="learnOptions.showSource" density="compact">
+                    <v-radio label="Zawsze" value="always" />
+                    <v-radio label="Po odpowiedzi" value="after" />
+                    <v-radio label="Nigdy" value="never" />
+                  </v-radio-group>
+                </div>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
           <v-btn
-            class="mb-3"
+            class="mt-4"
             color="primary"
             block
-            @click="emitLearn(false, false)"
+            @click="emitLearnOptions"
           >
-            Pojedyńczy po kolei
-          </v-btn>
-          <v-btn
-            class="mb-3"
-            color="primary"
-            block
-            @click="emitLearn(false, true)"
-          >
-            Pojedyńczy losowo
-          </v-btn>
-          <v-btn
-            class="mb-3"
-            color="primary"
-            block
-            @click="emitLearn(true, false)"
-          >
-            Nieskończony po kolei
-          </v-btn>
-          <v-btn
-            color="primary"
-            block
-            @click="emitLearn(true, true)"
-          >
-            Nieskończony losowo
+            Rozpocznij naukę
           </v-btn>
         </v-card-text>
       </v-card>
@@ -54,15 +66,24 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { defineEmits } from 'vue';
+import type { LearnOptions } from '../model/learnOptions';
 
 const emit = defineEmits<{
-  (e: 'learn', params: { infinite: boolean; randomized: boolean }): void;
+  (e: 'learn', params: LearnOptions): void;
   (e: 'exam'): void;
 }>();
 
-function emitLearn(infinite: boolean, randomized: boolean) {
-  emit('learn', { infinite, randomized });
+const learnOptions = ref<LearnOptions>({
+  infinite: false,
+  randomized: false,
+  showQuestionNumber: 'never',
+  showSource: 'never',
+});
+
+function emitLearnOptions() {
+  emit('learn', learnOptions.value);
 }
 
 function emitExam() {

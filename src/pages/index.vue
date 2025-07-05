@@ -20,7 +20,7 @@
     />
     <learn-view v-else-if="mode===Mode.Learn && questionList" 
       :question-list="questionList"
-      :infinite="infinity"
+      :options="learnOptions"
       @reset="mode=Mode.Menu"
       @answered="stats = $event"
     />
@@ -54,6 +54,7 @@ import type StatsData from "../model/statsData";
 import type QuestionsData from "../model/questionData";
 import type IQuestionList from "../services/questionList";
 import { createEmptyStatsData } from "../model/statsData";
+import type { LearnOptions } from "../model/learnOptions";
 
 enum Mode {
   Menu, Learn, Exam
@@ -63,12 +64,17 @@ const mode = ref<Mode>(Mode.Menu);
 const questionRange = new QuestionRange(0, 199);
 const questionsData = QuestionsDataJson as QuestionsData;
 
-const infinity = ref<boolean>(false);
+const learnOptions = ref<LearnOptions>({
+  infinite: false,
+  randomized: false,
+  showQuestionNumber: 'never',
+  showSource: 'never',
+});
 const questionList = ref<IQuestionList|null>(null);
 const stats = ref<StatsData>(createEmptyStatsData(200));
 
-function setLearn(args: {infinite: boolean, randomized: boolean}) {
-  infinity.value = args.infinite;
+function setLearn(args: LearnOptions) {
+  learnOptions.value = args;
   if (args.randomized) {
     questionList.value = new RandomizedQuestionList(questionsData, questionRange);
   } else {
