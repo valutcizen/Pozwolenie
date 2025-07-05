@@ -6,7 +6,7 @@
   >
     <v-card-text>
       <div style="font-size: 1.1em; margin-bottom: 20px;">
-        {{ question.question }}
+        {{ question.question }}{{ showSource && question.source ? ` (${question.source})` : '' }}
       </div>
       <v-list>
         <v-list-item
@@ -45,6 +45,7 @@ const props = defineProps<{
   infinite: boolean;
   examMode: boolean;
   cardTitle: string;
+  showSource: boolean;
 }>();
 defineEmits(['answer', 'next']);
 

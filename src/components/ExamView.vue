@@ -6,6 +6,7 @@
     :infinite="false"
     :exam-mode="true"
     :card-title="'Pytanie ' + (currentIndex + 1) + ' z 20'"
+    :show-source="false"
     @answer="onAnswerSelected"
     @next="next"
   />
@@ -15,6 +16,7 @@
     :infinite="false"
     :exam-mode="false"
     :card-title="'Pytanie ' + (questionIdx + 1)"
+    :show-source="true"
     @next="currentIndex = (currentIndex + 1) % 20"
   ></QuestionCard>
 
