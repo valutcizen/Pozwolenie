@@ -75,14 +75,26 @@ const emit = defineEmits<{
   (e: 'exam'): void;
 }>();
 
-const learnOptions = ref<LearnOptions>({
+const LEARN_OPTIONS_KEY = 'learnOptions';
+const defaultLearnOptions: LearnOptions = {
   infinite: false,
   randomized: false,
-  showQuestionNumber: 'never',
-  showSource: 'never',
-});
+  showQuestionNumber: 'after',
+  showSource: 'after',
+};
+const learnOptions = ref<LearnOptions>(loadLearnOptions());
+
+function loadLearnOptions() {
+  const savedOptions = localStorage.getItem(LEARN_OPTIONS_KEY);
+  let options: LearnOptions = { ...defaultLearnOptions };
+  if (savedOptions) {
+    Object.assign(options, JSON.parse(savedOptions));
+  }
+  return options;
+}
 
 function emitLearnOptions() {
+  localStorage.setItem(LEARN_OPTIONS_KEY, JSON.stringify(learnOptions.value));
   emit('learn', learnOptions.value);
 }
 
