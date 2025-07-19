@@ -6,18 +6,25 @@ import type StatsData from "@/model/statsData";
 import StatsService from "./statsService";
 
 export default class RandomizedQuestionList {
-    private questions: Question[];
-    private questionRange: number[];
+    public questionRange: number[];
     public stats: StatsService;
+    
+    private currentIndex: number = 0;
+    private questions: Question[];
 
     constructor(questionData: QuestionsData, 
             questionRangeDefinition: QuestionRange, 
             statsData: StatsData | null = null,
-            public currentIndex: number = 0) {
+            questionRange: number[] | undefined = undefined) {
         this.questions = questionData.questions;
         this.stats = new StatsService(statsData ?? this.questions.length);
-        this.questionRange = questionRangeDefinition.getQuestionIndexes(this.questions.length);
-        this.shuffleQuestions();
+        if (questionRange) {
+            this.questionRange = questionRange;
+        } else {
+            this.questionRange = questionRangeDefinition.getQuestionIndexes(this.questions.length);
+            this.shuffleQuestions();
+        }
+        this.currentIndex = this.stats.getStats().totalQuestions % this.questionRange.length;
     }
 
     private shuffleQuestions(): void {

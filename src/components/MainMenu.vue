@@ -2,8 +2,20 @@
   <v-row class="justify-center">
     <v-col cols="12" md="6" lg="4">
       <v-card class="mb-6">
-        <v-card-title class="text-center">Nauka</v-card-title>
+        <v-card-title class="text-center">
+          Nauka
+        </v-card-title>
         <v-card-text>
+          <v-btn
+            v-if="props.canLoad"
+            class="mb-2"
+            color="primary"
+            block
+            @click="emit('load')"
+          >
+            Kontynuuj
+          </v-btn>
+          <v-divider v-if="props.canLoad" class="mb-4"></v-divider>
           <v-switch
             v-model="learnOptions.infinite"
             :label="learnOptions.infinite ? 'Nieskończony' : 'Pojedyńczy'"
@@ -55,7 +67,7 @@
           <v-btn
             color="secondary"
             block
-            @click="emitExam"
+            @click="emit('exam')"
           >
             Rozpocznij egzamin
           </v-btn>
@@ -70,8 +82,13 @@ import { ref } from 'vue';
 import { defineEmits } from 'vue';
 import type { LearnOptions } from '../model/learnOptions';
 
+const props = defineProps<{
+  canLoad?: boolean
+}>();
+
 const emit = defineEmits<{
   (e: 'learn', params: LearnOptions): void;
+  (e: 'load'): void;
   (e: 'exam'): void;
 }>();
 
@@ -96,9 +113,5 @@ function loadLearnOptions() {
 function emitLearnOptions() {
   localStorage.setItem(LEARN_OPTIONS_KEY, JSON.stringify(learnOptions.value));
   emit('learn', learnOptions.value);
-}
-
-function emitExam() {
-  emit('exam');
 }
 </script>
