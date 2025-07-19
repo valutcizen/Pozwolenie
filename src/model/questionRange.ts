@@ -24,6 +24,12 @@ export default class QuestionRange {
         this.indexes.add(index);
     }
 
+    public addIndexes(indexes: number[]): void {
+        for (const index of indexes) {
+            this.indexes.add(index);
+        }
+    }
+
     public getQuestionIndexes(max: number): number[] {
         return Array.from(this.indexes)
             .filter(i => i >= 0 && i <= max)

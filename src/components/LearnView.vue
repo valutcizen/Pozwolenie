@@ -19,13 +19,13 @@
 import { ref, computed } from 'vue';
 import QuestionCard from './QuestionCard.vue';
 import StatsCard from './StatsCard.vue';
-import type IQuestionList from '../services/questionList';
+import type QuestionList from '../services/questionList';
 import type { IndexedQuestion } from '../model/indexedQuestion';
 import type StatsData from '../model/statsData';
 import type { LearnOptions } from '../model/learnOptions';
 
 const props = defineProps<{
-  questionList: IQuestionList;
+  questionList: QuestionList;
   options: LearnOptions;
 }>();
 

@@ -15,14 +15,16 @@
     </div>
 
     <main-menu v-if="mode===Mode.Menu"
+      :can-load="canLoad"
       @learn="setLearn"
       @exam="setExam"
+      @load="loadLearn"
     />
     <learn-view v-else-if="mode===Mode.Learn && questionList" 
       :question-list="questionList"
       :options="learnOptions"
       @reset="mode=Mode.Menu"
-      @answered="stats = $event"
+      @answered="stats = $event; persistentLearn.save()"
     />
     <exam-view v-else-if="mode===Mode.Exam && questionList"
       :question-list="questionList"
@@ -52,15 +54,17 @@ import RandomizedQuestionList from "../services/randomizedQuestionList";
 import OrderedQuestionList from "../services/orderedQuestionList";
 import type StatsData from "../model/statsData";
 import type QuestionsData from "../model/questionData";
-import type IQuestionList from "../services/questionList";
+import type QuestionList from "../services/questionList";
 import { createEmptyStatsData } from "../model/statsData";
 import type { LearnOptions } from "../model/learnOptions";
+import PersistLearnState from "../services/persistLearnState";
 
 enum Mode {
   Menu, Learn, Exam
 }
 
 const mode = ref<Mode>(Mode.Menu);
+const canLoad = ref<boolean>(false);
 const questionRange = new QuestionRange(0, 199);
 const questionsData = QuestionsDataJson as QuestionsData;
 
@@ -70,8 +74,9 @@ const learnOptions = ref<LearnOptions>({
   showQuestionNumber: 'never',
   showSource: 'never',
 });
-const questionList = ref<IQuestionList|null>(null);
+const questionList = ref<QuestionList|null>(null);
 const stats = ref<StatsData>(createEmptyStatsData(200));
+const persistentLearn = new PersistLearnState(canLoad, questionsData, stats);
 
 function setLearn(args: LearnOptions) {
   learnOptions.value = args;
@@ -82,10 +87,27 @@ function setLearn(args: LearnOptions) {
   }
   stats.value = createEmptyStatsData(200);
   mode.value = Mode.Learn;
+  persistentLearn.init(learnOptions.value, questionList.value.questionRange);
 }
 
 function setExam() {
   mode.value = Mode.Exam;
   questionList.value = new RandomizedQuestionList(questionsData, questionRange);
 }
+
+function loadLearn() {
+  if (!canLoad.value) {
+    console.warn("Nie można załadować stanu nauki, brak danych.");
+    return;
+  }
+
+  const loadedData = persistentLearn.load();
+  learnOptions.value = loadedData.options;
+  if (loadedData.options.randomized) {
+    questionList.value = new RandomizedQuestionList(questionsData, loadedData.questionRange, stats.value, loadedData.questionOrder);
+  } else {
+    questionList.value = new OrderedQuestionList(questionsData, loadedData.questionRange, stats.value, loadedData.questionOrder);
+  }
+  mode.value = Mode.Learn;
+} 
 </script>
