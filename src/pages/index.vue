@@ -8,11 +8,17 @@
         src="@/assets/logo.png"
       />
 
-      <div class="mb-8 text-center">
+      <div class="mb-6 text-center">
         <h4>Twoje Logo - Twój Nagłówek</h4>
         <h3>Aplikacja pomagająca w nauce do egzaminu WPA na pozwolenie na broń</h3>
       </div>
     </div>
+    
+    <v-row v-if="mode !== Mode.Menu" class="mb-6" justify="center">
+      <v-btn color="secondary" @click="mode = Mode.Menu">
+        Powrót do menu głównego
+      </v-btn>
+    </v-row>
 
     <main-menu v-if="mode===Mode.Menu"
       :can-load="canLoad"
@@ -32,12 +38,6 @@
       @reset="mode=Mode.Menu"
       @answered="stats = $event"
     />
-    
-    <v-row v-if="mode !== Mode.Menu" class="mt-8" justify="center">
-      <v-btn color="secondary" @click="mode = Mode.Menu">
-        Powrót do menu głównego
-      </v-btn>
-    </v-row>
   </v-container>
 </template>
 
