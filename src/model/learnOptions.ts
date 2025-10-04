@@ -3,4 +3,5 @@ export interface LearnOptions {
   randomized: boolean;
   showQuestionNumber: 'always' | 'after' | 'never';
   showSource: 'always' | 'after' | 'never';
+  questionRange: string;
 }
