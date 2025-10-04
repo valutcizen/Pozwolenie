@@ -38,8 +38,8 @@ Current version is available for preview at GitHub Pages: [https://valutcizen.gi
 ## Source code structure
 In `src` path you find:
 - *assets* Binary files used by app like images
-- *components* Vue based views and UI components
+- *components* Vue based views and UI components [More](src/components/README.md)
 - *data* Current question base with answers
 - *model* Type files
-- *services* Bussiness logic files
+- *services* Bussiness logic files [More](src/services/README.md)
 - other paths contains things needed by Vue and Vuetify and propably you don't want change anything there
