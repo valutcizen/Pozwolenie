@@ -10,6 +10,66 @@ export default class QuestionRange {
         }
     }
 
+    public static fromString(rangeString: string): QuestionRange {
+        const range = new QuestionRange();
+        if (!rangeString) {
+            return range;
+        }
+
+        const parts = rangeString.split(/[\s,]+/);
+        for (const part of parts) {
+            if (part.includes('-')) {
+                const [start, end] = part.split('-').map(Number);
+                if (!isNaN(start) && !isNaN(end)) {
+                    range.addRange(start, end);
+                }
+            } else {
+                const index = Number(part);
+                if (!isNaN(index)) {
+                    range.addIndex(index);
+                }
+            }
+        }
+        return range;
+    }
+
+    public toString(): string {
+        if (this.indexes.size === 0) {
+            return '';
+        }
+
+        const sortedIndexes = Array.from(this.indexes).sort((a, b) => a - b);
+        const ranges: string[] = [];
+        if (sortedIndexes.length === 0) {
+            return '';
+        }
+        
+        let start = sortedIndexes[0];
+        let end = sortedIndexes[0];
+
+        for (let i = 1; i < sortedIndexes.length; i++) {
+            if (sortedIndexes[i] === end + 1) {
+                end = sortedIndexes[i];
+            } else {
+                if (start === end) {
+                    ranges.push(start.toString());
+                } else {
+                    ranges.push(`${start}-${end}`);
+                }
+                start = sortedIndexes[i];
+                end = sortedIndexes[i];
+            }
+        }
+
+        if (start === end) {
+            ranges.push(start.toString());
+        } else {
+            ranges.push(`${start}-${end}`);
+        }
+
+        return ranges.join(',');
+    }
+
     public clear(): void {
         this.indexes.clear();
     }
