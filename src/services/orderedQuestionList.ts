@@ -1,10 +1,11 @@
 import type QuestionsData from "@/model/questionData";
 import type QuestionList from "./questionList";
-import type QuestionRange from "@/model/questionRange";
+import QuestionRange from "@/model/questionRange";
 import type Question from "@/model/question";
 import type { IndexedQuestion } from "@/model/indexedQuestion";
 import type StatsData from "@/model/statsData";
 import StatsService from "./statsService";
+import type { LearnOptions } from "@/model/learnOptions";
 
 export default class OrderedQuestionList implements QuestionList {
     public questionRange: number[];
@@ -14,12 +15,18 @@ export default class OrderedQuestionList implements QuestionList {
     private currentIndex: number = 0;
 
     constructor(questionData: QuestionsData, 
-                questionRangeGenerator: QuestionRange, 
+                learnOptions: LearnOptions, 
                 statsData: StatsData | null = null,
-                questionRange: number[] | undefined = undefined) {
+                questionOrder: number[] | undefined = undefined) {
         this.questions = questionData.questions;
         this.stats = new StatsService(statsData ?? this.questions.length);
-        this.questionRange = questionRange ?? questionRangeGenerator.getQuestionIndexes(this.questions.length);
+        if (questionOrder) {
+            this.questionRange = questionOrder;
+        } else if (learnOptions.questionRange) {
+            this.questionRange = QuestionRange.fromString(learnOptions.questionRange).getQuestionIndexes(this.questions.length);
+        } else {
+            this.questionRange = Array.from(Array(this.questions.length).keys());
+        }
         this.currentIndex = this.stats.getStats().totalQuestions % this.questionRange.length;
     }
 

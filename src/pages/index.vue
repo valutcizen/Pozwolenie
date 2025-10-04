@@ -81,18 +81,25 @@ const persistentLearn = new PersistLearnState(canLoad, questionsData, stats);
 function setLearn(args: LearnOptions) {
   learnOptions.value = args;
   if (args.randomized) {
-    questionList.value = new RandomizedQuestionList(questionsData, questionRange);
+    questionList.value = new RandomizedQuestionList(questionsData, learnOptions.value);
   } else {
-    questionList.value = new OrderedQuestionList(questionsData, questionRange);
+    questionList.value = new OrderedQuestionList(questionsData, learnOptions.value);
   }
-  stats.value = createEmptyStatsData(200);
+  stats.value = createEmptyStatsData(questionList.value.questionRange.length);
   mode.value = Mode.Learn;
   persistentLearn.init(learnOptions.value, questionList.value.questionRange);
 }
 
 function setExam() {
   mode.value = Mode.Exam;
-  questionList.value = new RandomizedQuestionList(questionsData, questionRange);
+  const examOptions: LearnOptions = {
+    infinite: false,
+    randomized: true,
+    showQuestionNumber: 'never',
+    showSource: 'never',
+    questionRange: '' // all questions
+  };
+  questionList.value = new RandomizedQuestionList(questionsData, examOptions);
 }
 
 function loadLearn() {
@@ -104,9 +111,9 @@ function loadLearn() {
   const loadedData = persistentLearn.load();
   learnOptions.value = loadedData.options;
   if (loadedData.options.randomized) {
-    questionList.value = new RandomizedQuestionList(questionsData, loadedData.questionRange, stats.value, loadedData.questionOrder);
+    questionList.value = new RandomizedQuestionList(questionsData, learnOptions.value, stats.value, loadedData.questionOrder);
   } else {
-    questionList.value = new OrderedQuestionList(questionsData, loadedData.questionRange, stats.value, loadedData.questionOrder);
+    questionList.value = new OrderedQuestionList(questionsData, learnOptions.value, stats.value, loadedData.questionOrder);
   }
   mode.value = Mode.Learn;
 } 

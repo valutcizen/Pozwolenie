@@ -1,9 +1,10 @@
 import type { IndexedQuestion } from "@/model/indexedQuestion";
 import type Question from "@/model/question";
 import type QuestionsData from "@/model/questionData";
-import type QuestionRange from "@/model/questionRange";
+import QuestionRange from "@/model/questionRange";
 import type StatsData from "@/model/statsData";
 import StatsService from "./statsService";
+import type { LearnOptions } from "@/model/learnOptions";
 
 export default class RandomizedQuestionList {
     public questionRange: number[];
@@ -13,15 +14,19 @@ export default class RandomizedQuestionList {
     private questions: Question[];
 
     constructor(questionData: QuestionsData, 
-            questionRangeDefinition: QuestionRange, 
+            learnOptions: LearnOptions, 
             statsData: StatsData | null = null,
-            questionRange: number[] | undefined = undefined) {
+            questionOrder: number[] | undefined = undefined) {
         this.questions = questionData.questions;
         this.stats = new StatsService(statsData ?? this.questions.length);
-        if (questionRange) {
-            this.questionRange = questionRange;
+        if (questionOrder) {
+            this.questionRange = questionOrder;
         } else {
-            this.questionRange = questionRangeDefinition.getQuestionIndexes(this.questions.length);
+            if (learnOptions.questionRange) {
+                this.questionRange = QuestionRange.fromString(learnOptions.questionRange).getQuestionIndexes(this.questions.length);
+            } else {
+                this.questionRange = Array.from(Array(this.questions.length).keys());
+            }
             this.shuffleQuestions();
         }
         this.currentIndex = this.stats.getStats().totalQuestions % this.questionRange.length;
@@ -37,14 +42,14 @@ export default class RandomizedQuestionList {
     }
 
     public getNextQuestion(): IndexedQuestion | null {
-        if (this.currentIndex >= this.questions.length) 
+        if (this.currentIndex >= this.questionRange.length) 
             return null;
 
         const questionIndex = this.questionRange[this.currentIndex];
         const question = this.questions[questionIndex];
         const indexedQuestion: IndexedQuestion = { ...question, 
             index: questionIndex, 
-            is_last: this.currentIndex === this.questions.length - 1 
+            is_last: this.currentIndex === this.questionRange.length - 1 
         };
         this.currentIndex++;
         return indexedQuestion;

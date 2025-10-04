@@ -22,16 +22,13 @@ export default class PersistLearnState {
             this.saveData = null;
     }
 
-    public load(): { questionRange: QuestionRange, questionOrder: number[], options: LearnOptions } {
+    public load(): { questionOrder: number[], options: LearnOptions } {
         if (!this.saveData) {
             throw new Error("No save data available");
         }
-        const questionRange = new QuestionRange();
-        questionRange.addIndexes(this.saveData.questionRange);
         this.statsDataRef.value = this.saveData.statsData;
 
         return {
-            questionRange: questionRange,
             questionOrder: this.saveData.questionRange,
             options: this.saveData.options
         };
