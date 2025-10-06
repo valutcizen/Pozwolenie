@@ -1,3 +1,3 @@
-import type Question from './question';
+import type Question from './question'
 
-export type IndexedQuestion = Question & { index: number, is_last: boolean };
+export type IndexedQuestion = Question & { index: number, is_last: boolean }

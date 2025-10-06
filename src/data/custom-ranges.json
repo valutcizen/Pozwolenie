@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Rozporządzenia",
+    "tip": "Rozporządzenia",
+    "range": "146-153,159-163"
+  },
+  {
+    "name": "UoBiA - Rozdział 1",
+    "tip": "Przepisy ogólne (art. 1-8a)",
+    "range": "1-20"
+  },
+  {
+    "name": "UoBiA - Rozdział 2",
+    "tip": "Zasady i warunki wydawania, cofania pozwoleń na broń, rejestracji broni oraz dysponowania bronią i amunicją (art. 9-33)",
+    "range": "21-67,70-127,129-137,139-145,154"
+  },
+  {
+    "name": "UoBiA - Rozdział 3",
+    "tip": "Przewóz przez terytorium Rzeczypospolitej Polskiej, przywóz z zagranicy i wywóz za granicę broni i amunicji oraz zasady posiadania broni i amunicji przez cudzoziemców (art. 34-44a)",
+    "range": "155-158,164-169"
+  },
+  {
+    "name": "UoBiA - Rozdział 4",
+    "tip": "Zasady działania strzelnic (art. 45-49)",
+    "range": "170-172"
+  },
+  {
+    "name": "UoBiA - Rozdział 5",
+    "tip": "Przepisy karne (art. 50-51)",
+    "range": "185-193"
+  }
+]

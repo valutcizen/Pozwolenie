@@ -1,6 +1,6 @@
 <template>
   <v-row class="justify-center">
-    <v-col cols="12" md="6" lg="4">
+    <v-col cols="12" lg="4" md="6">
       <v-card class="mb-6">
         <v-card-title class="text-center">
           Nauka
@@ -8,25 +8,25 @@
         <v-card-text>
           <v-btn
             v-if="props.canLoad"
+            block
             class="mb-2"
             color="primary"
-            block
             @click="emit('load')"
           >
             Kontynuuj
           </v-btn>
-          <v-divider v-if="props.canLoad" class="mb-4"></v-divider>
+          <v-divider v-if="props.canLoad" class="mb-4" />
           <v-switch
             v-model="learnOptions.infinite"
-            :label="learnOptions.infinite ? 'Nieskończony' : 'Pojedyńczy'"
             color="primary"
             hide-details
+            :label="learnOptions.infinite ? 'Nieskończony' : 'Pojedyńczy'"
           />
           <v-switch
             v-model="learnOptions.randomized"
-            :label="learnOptions.randomized ? 'Losowo' : 'Po kolei'"
             color="primary"
             hide-details
+            :label="learnOptions.randomized ? 'Losowo' : 'Po kolei'"
           />
           <v-expansion-panels>
             <v-expansion-panel>
@@ -48,13 +48,17 @@
                     <v-radio label="Nigdy" value="never" />
                   </v-radio-group>
                 </div>
+                <div>
+                  <div class="text-subtitle-2 mb-1">Zakres pytań</div>
+                  <QuestionRangeSelector v-model="learnOptions.questionRange" />
+                </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
           <v-btn
+            block
             class="mt-4"
             color="primary"
-            block
             @click="emitLearnOptions"
           >
             Rozpocznij naukę
@@ -65,8 +69,8 @@
         <v-card-title class="text-center">Egzamin</v-card-title>
         <v-card-text>
           <v-btn
-            color="secondary"
             block
+            color="secondary"
             @click="emit('exam')"
           >
             Rozpocznij egzamin
@@ -78,40 +82,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { defineEmits } from 'vue';
-import type { LearnOptions } from '../model/learnOptions';
+  import type { LearnOptions } from '../model/learnOptions'
 
-const props = defineProps<{
-  canLoad?: boolean
-}>();
+  import { defineEmits, ref } from 'vue'
+  import QuestionRangeSelector from './QuestionRangeSelector.vue'
 
-const emit = defineEmits<{
-  (e: 'learn', params: LearnOptions): void;
-  (e: 'load'): void;
-  (e: 'exam'): void;
-}>();
+  const props = defineProps<{
+    canLoad?: boolean
+  }>()
 
-const LEARN_OPTIONS_KEY = 'learnOptions';
-const defaultLearnOptions: LearnOptions = {
-  infinite: false,
-  randomized: false,
-  showQuestionNumber: 'after',
-  showSource: 'after',
-};
-const learnOptions = ref<LearnOptions>(loadLearnOptions());
+  const emit = defineEmits<{
+    (e: 'learn', params: LearnOptions): void
+    (e: 'load' | 'exam'): void
+  }>()
 
-function loadLearnOptions() {
-  const savedOptions = localStorage.getItem(LEARN_OPTIONS_KEY);
-  let options: LearnOptions = { ...defaultLearnOptions };
-  if (savedOptions) {
-    Object.assign(options, JSON.parse(savedOptions));
+  const LEARN_OPTIONS_KEY = 'learnOptions'
+  const defaultLearnOptions: LearnOptions = {
+    infinite: false,
+    randomized: false,
+    showQuestionNumber: 'after',
+    showSource: 'after',
+    questionRange: '',
   }
-  return options;
-}
+  const learnOptions = ref<LearnOptions>(loadLearnOptions())
 
-function emitLearnOptions() {
-  localStorage.setItem(LEARN_OPTIONS_KEY, JSON.stringify(learnOptions.value));
-  emit('learn', learnOptions.value);
-}
+  function loadLearnOptions () {
+    const savedOptions = localStorage.getItem(LEARN_OPTIONS_KEY)
+    const options: LearnOptions = { ...defaultLearnOptions }
+    if (savedOptions) {
+      Object.assign(options, JSON.parse(savedOptions))
+    }
+    // Make sure questionRange is not undefined
+    if (!options.questionRange) {
+      options.questionRange = defaultLearnOptions.questionRange
+    }
+    return options
+  }
+
+  function emitLearnOptions () {
+    localStorage.setItem(LEARN_OPTIONS_KEY, JSON.stringify(learnOptions.value))
+    emit('learn', learnOptions.value)
+  }
 </script>

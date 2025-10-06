@@ -12,6 +12,7 @@ declare module 'vue' {
     LearnView: typeof import('./components/LearnView.vue')['default']
     MainMenu: typeof import('./components/MainMenu.vue')['default']
     QuestionCard: typeof import('./components/QuestionCard.vue')['default']
+    QuestionRangeSelector: typeof import('./components/QuestionRangeSelector.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StatsCard: typeof import('./components/StatsCard.vue')['default']
