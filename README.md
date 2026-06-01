@@ -55,6 +55,11 @@ yarn preview
 ```bash
 yarn deploy
 ```
+On Windows, open Git Bash and run:
+```bash
+git subtree push --prefix dist origin gh-pages
+```
+
 6. After a few minutes, check the published page: [https://valutcizen.github.io/Pozwolenie/](https://valutcizen.github.io/Pozwolenie/)
 
 If deployment fails because `gh-pages` has diverged, fetch the latest refs and repeat the deploy:
